@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: aTicket
+  datasource:
+    url: jdbc:postgresql://localhost/mydatabase
+    username: myuser
+    password: mypassword
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+server:
+  port: 8080
