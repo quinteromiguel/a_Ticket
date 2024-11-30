@@ -1,7 +1,8 @@
 package com.project.aTicket.controller;
 
-import com.project.aTicket.dto.EventSeatingDTO;
 import com.project.aTicket.dto.NewEventDTO;
+import com.project.aTicket.dto.ReporteDTO;
+import com.project.aTicket.model.Event;
 import com.project.aTicket.service.EventService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,40 +17,33 @@ public class EventController {
     private final EventService eventService;
 
     @GetMapping()
-    public ResponseEntity<List<EventSeatingDTO>> getAllEvents() {
+    public ResponseEntity<List<Event>> getAllEvents() {
         return ResponseEntity.ok(
                 eventService.getEvents()
-                        .stream()
-                        .map(EventSeatingDTO::fromEntity)
-                        .toList()
         );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EventSeatingDTO> getEvent(@PathVariable Long id) {
-        return ResponseEntity.ok(
-                EventSeatingDTO.fromEntity(
-                        eventService.getEvent(id)
-                )
-        );
+    public ResponseEntity<Event> getEvent(@PathVariable Long id) {
+        return ResponseEntity.ok(eventService.getEvent(id));
     }
 
     @PostMapping()
-    public ResponseEntity<EventSeatingDTO> createEvent(@RequestBody NewEventDTO event) {
-        return ResponseEntity.ok(
-                EventSeatingDTO.fromEntity(
-                eventService.createEvent(event)
-                )
+    public ResponseEntity<Event> createEvent(@RequestBody NewEventDTO event) {
+        return ResponseEntity.ok(eventService.createEvent(event)
         );
     }
 
     @PutMapping()
-    public ResponseEntity<EventSeatingDTO> updateEvent(@RequestParam Long id, @RequestParam String name, @RequestParam String date, @RequestParam String description) {
-        return ResponseEntity.ok(
-                EventSeatingDTO.fromEntity(
-                eventService.updateEvent(id, name, date, description)
-                )
+    public ResponseEntity<Event> updateEvent(@RequestParam Long id, @RequestParam String name, @RequestParam String date, @RequestParam String description) {
+        return ResponseEntity.ok(eventService.updateEvent(id, name, date, description)
+
         );
+    }
+
+    @GetMapping("/reporte")
+    public ResponseEntity<ReporteDTO> getReporte(@RequestParam Long id) {
+        return ResponseEntity.ok(eventService.getReporte(id));
     }
 
     @DeleteMapping()

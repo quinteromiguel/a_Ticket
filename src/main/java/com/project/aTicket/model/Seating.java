@@ -20,6 +20,7 @@ public class Seating {
     private Double price;
     private String type;
 
+    @JsonIgnore
     @ManyToOne
     private Event event;
 

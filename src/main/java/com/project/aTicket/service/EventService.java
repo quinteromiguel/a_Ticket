@@ -1,8 +1,10 @@
 package com.project.aTicket.service;
 
 import com.project.aTicket.dto.NewEventDTO;
+import com.project.aTicket.dto.ReporteDTO;
 import com.project.aTicket.model.Event;
 import com.project.aTicket.model.Seating;
+import com.project.aTicket.model.Ticket;
 import com.project.aTicket.repository.EventRepository;
 import com.project.aTicket.repository.SeatingRepository;
 import lombok.AllArgsConstructor;
@@ -46,6 +48,29 @@ public class EventService {
     public Seating updateSeating(Seating seating) {
         return seatingRepository.save(seating);
     }
+
+    public ReporteDTO getReporte(Long id) {
+        Event event = eventRepository.findById(id).orElseThrow();
+        Seating vip = event.getSeating().stream().filter(seating -> seating.getType().equals("VIP")).findFirst().orElseThrow();
+        Seating general = event.getSeating().stream().filter(seating -> seating.getType().equals("General")).findFirst().orElseThrow();
+        Integer totalGeneral = general.getTickets().stream().mapToInt(Ticket::getQuantity).sum();
+        Integer totalVip = vip.getTickets().stream().mapToInt(Ticket::getQuantity).sum();
+
+        return ReporteDTO.builder()
+                .title(event.getTitle())
+                .date(event.getDate())
+                .description(event.getDescription())
+                .vipPrice(vip.getPrice())
+                .generalPrice(general.getPrice())
+                .vipSold(totalVip)
+                .generalSold(totalGeneral)
+                .vipTotal(totalVip * vip.getPrice())
+                .generalTotal(totalGeneral * general.getPrice())
+                .total((totalVip * vip.getPrice()) + (totalGeneral * general.getPrice()))
+                .build();
+    }
+
+
 
     public void deleteEvent(Long id) {
         eventRepository.deleteById(id);
