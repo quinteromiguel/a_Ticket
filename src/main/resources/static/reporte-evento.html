@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reporte de Evento</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <header class="bg-primary text-white text-center py-3">
+        <a href="index.html" class="text-decoration-none text-white">
+            <h1>A-Ticket</h1>
+        </a>
+        <p>Reporte de Evento</p>
+    </header>
+
+  <div class="container mt-5">
+    <h1 class="text-center">Reporte del Evento</h1>
+
+    <div id="reportContainer" class="mt-4">
+      <!-- Reporte dinámico se mostrará aquí -->
+    </div>
+  </div>
+
+  <script>
+    // Obtener el ID del evento desde la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const eventId = urlParams.get('eventId');
+
+    // Cargar el reporte del evento
+    async function fetchEventReport() {
+      const url = `http://localhost:8080/api/event/reporte?id=${eventId}`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Error: ${response.status}`);
+        }
+
+        const report = await response.json();
+        renderReport(report);
+      } catch (error) {
+        console.error("Error al obtener el reporte del evento:", error);
+        alert("Ocurrió un error al cargar el reporte del evento.");
+      }
+    }
+
+    // Renderizar el reporte en la página
+    function renderReport(report) {
+      const container = document.getElementById("reportContainer");
+
+      container.innerHTML = `
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">${report.title}</h5>
+            <p class="card-text"><strong>Descripción:</strong> ${report.description}</p>
+            <p class="card-text"><strong>Fecha:</strong> ${report.date}</p>
+            <p class="card-text"><strong>Precio VIP:</strong> $${report.vipPrice}</p>
+            <p class="card-text"><strong>Boletas VIP Vendidas:</strong> ${report.vipSold}</p>
+            <p class="card-text"><strong>Precio General:</strong> $${report.generalPrice}</p>
+            <p class="card-text"><strong>Boletas Generales Vendidas:</strong> ${report.generalSold}</p>
+            <p class="card-text"><strong>Total VIP:</strong> $${report.vipTotal}</p>
+            <p class="card-text"><strong>Total General:</strong> $${report.generalTotal}</p>
+            <p class="card-text"><strong>Total General:</strong> $${report.total}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Cargar el reporte al cargar la página
+    fetchEventReport();
+  </script>
+
+<footer class="bg-light text-center py-3 mt-4">
+    <ul class="list-unstyled d-flex justify-content-center mb-0">
+        <li class="mx-3">
+            <a href="index.html" class="text-decoration-none">Volver a la página principal</a>
+        </li>
+    </ul>
+    <p class="mt-2">&copy; 2024 a-Ticket.</p>
+</footer>
+
+</body>
+</html>
